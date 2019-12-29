@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+<!--    <description>SSM整合配置： Spring整合Mybatis、Spring事务配置</description>-->
+
+    <!--注解扫描-->
+    <context:component-scan base-package="com.yidong.service"/>
+
+    <!--1. 加载jdbc.properties配置文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--2. 连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--3. Spring整合MyBatis配置（1）SqlSessionFactoryBean-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+
+    <!--4. Spring整合MyBatis配置（2）包扫描配置-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--A. 自动记载该目录下的配置文件。要求： 接口与接口映射配置在同一个目录才会自动加载-->
+        <!--B. 自动对该目录下的接口生成代理对象，加入容器-->
+        <property name="basePackage" value="com.yidong.mapper"/>
+    </bean>
+
+    <!--5. spring事务配置-->
+    <!--5.1 配置事务管理器-->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--5.2 开启事务注解支持 (这样就可以使用@Transactional注解) -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    </beans>

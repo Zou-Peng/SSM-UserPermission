@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yidong.mapper.UserMapper">
+    <select id="findAll" resultType="com.yidong.entity.User">
+        select * from user
+    </select>
+
+    <select id="findById" resultType="com.yidong.entity.User">
+        select * from user where id=#{id}
+    </select>
+
+    <select id="findByUsername" resultType="com.yidong.entity.User">
+        select * from user where name=#{username}
+    </select>
+
+
+    <delete id="delete">
+        delete from user where id=#{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.yidong.entity.User">
+        insert into user(name,age,sex) values(#{name},#{age},#{sex})
+    </insert>
+
+    <update id="update">
+        update user set name=#{name},age=#{age},sex=#{sex} where id=#{id}
+    </update>
+
+    <delete id="deleteUserRoleByUserId">
+        DELETE FROM user_role WHERE userId=#{userId}
+    </delete>
+
+    <insert id="saveUserRole">
+        INSERT INTO user_role(userId,roleId)VALUES(#{userId},#{roleId})
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yidong.mapper.PermissionMapper">
+    <select id="findAll" resultType="com.yidong.entity.Permission">
+        select * from permission
+    </select>
+
+    <select id="findById" resultType="com.yidong.entity.Permission">
+        select * from permission where permissionId=#{permissionId}
+    </select>
+
+    <select id="findByPermissionName" resultType="com.yidong.entity.Permission">
+        select * from permission where name=#{permissionName}
+    </select>
+
+
+    <delete id="delete">
+        delete from permission where permissionId=#{permissionId}
+    </delete>
+
+    <insert id="insert" parameterType="com.yidong.entity.Permission">
+        insert into permission(permissionName,parentId,parentName,url,level)
+        values(#{permissionName},#{parentId},#{parentName},#{url},#{level})
+    </insert>
+
+    <update id="update">
+        update permission set permissionName=#{permissionName},
+        parentId=#{parentId},parentName=#{parentName},url=#{url},level=#{level}
+         where permissionId=#{permissionId}
+    </update>
+
+        <select id="findRolePermissionByRoleId" resultType="com.yidong.entity.Permission">
+            select p.* from role_permission rp inner join permission p on rp.permissionId=p.permissionId where rp.roleId=#{roleId}
+        </select>
+
+    <select id="findUserPermissionByUserId" resultType="com.yidong.entity.Permission">
+        select
+         distinct m.*
+         from permission m
+         inner join role_permission rp on m.permissionId=rp.permissionId
+         inner join user_role ru on ru.roleId=rp.roleId
+         where 1=1
+         and ru.userId=#{userId}
+    </select>
+</mapper>
